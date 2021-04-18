@@ -9,7 +9,18 @@ var passport = require('passport');
 var authenticate = require('../authenticate');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
+  User.find({}, (err, users) => {
+    if(err) {
+      return next(err);
+    }
+    else {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json(users);
+    
+    }
+  })
   res.send('respond with a resource');
 });
 
